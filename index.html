@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBATU B.Tech Sem VII Mechanical - Exam & PYQ Tracker</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dbatu: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0a3651',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 glass-panel shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg leading-tight tracking-tight">DBATU Sem 7 Mech Tracker</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Regular Winter Exam 2026 • 5 Core Subjects</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button id="themeToggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Light/Dark Theme">
+                    <i class="fa-solid fa-moon dark:hidden text-lg"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline text-lg text-amber-400"></i>
+                </button>
+
+                <button onclick="openModal('deployModal')" class="hidden sm:flex items-center space-x-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+                    <i class="fa-brands fa-github text-sm"></i>
+                    <span>Deploy Guide</span>
+                </button>
+
+                <button onclick="exportData()" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Export Backup JSON">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+
+                <label class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer" title="Import Data JSON">
+                    <i class="fa-solid fa-upload"></i>
+                    <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
+                </label>
+
+                <button onclick="confirmReset()" class="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition" title="Reset All Data">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- Banner & Live Exam Date Timers -->
+        <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-indigo-950 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden border border-slate-800">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 relative z-10">
+                <div class="space-y-1">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">
+                        <i class="fa-solid fa-calendar-days mr-1.5 text-amber-400"></i> Exam Dates Confirmed
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Winter Semester Examination 2026</h2>
+                    <p class="text-slate-300 text-xs sm:text-sm max-w-xl">
+                        Dr. Babasaheb Ambedkar Technological University, Lonere. Track syllabus completion & practice past paper PYQs for your 5 core subjects.
+                    </p>
+                </div>
+
+                <!-- Live Subject Countdowns -->
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 w-full lg:w-auto">
+                    <div class="bg-slate-900/80 border border-sky-500/30 p-2.5 rounded-xl text-center">
+                        <div class="text-[10px] font-bold text-sky-400 uppercase">MET</div>
+                        <div class="text-xs font-semibold text-slate-300">23 Nov</div>
+                        <div id="cd-MET" class="text-xs font-black text-amber-400 mt-0.5">--d</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-indigo-500/30 p-2.5 rounded-xl text-center">
+                        <div class="text-[10px] font-bold text-indigo-400 uppercase">IEM</div>
+                        <div class="text-xs font-semibold text-slate-300">26 Nov</div>
+                        <div id="cd-IEM" class="text-xs font-black text-amber-400 mt-0.5">--d</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-amber-500/30 p-2.5 rounded-xl text-center">
+                        <div class="text-[10px] font-bold text-amber-400 uppercase">NCM</div>
+                        <div class="text-xs font-semibold text-slate-300">28 Nov</div>
+                        <div id="cd-NCM" class="text-xs font-black text-amber-400 mt-0.5">--d</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-emerald-500/30 p-2.5 rounded-xl text-center">
+                        <div class="text-[10px] font-bold text-emerald-400 uppercase">SD</div>
+                        <div class="text-xs font-semibold text-slate-300">01 Dec</div>
+                        <div id="cd-SD" class="text-xs font-black text-amber-400 mt-0.5">--d</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-purple-500/30 p-2.5 rounded-xl text-center col-span-2 sm:col-span-1">
+                        <div class="text-[10px] font-bold text-purple-400 uppercase">IPR</div>
+                        <div class="text-xs font-semibold text-slate-300">03 Dec</div>
+                        <div id="cd-IPR" class="text-xs font-black text-amber-400 mt-0.5">--d</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Progress Dashboard -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Overall Syllabus Coverage -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Syllabus Completion</span>
+                    <i class="fa-solid fa-chart-pie text-sky-500"></i>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span id="overallSyllabusPercent" class="text-3xl font-extrabold">0%</span>
+                    <span id="overallSyllabusRatio" class="text-xs text-slate-500 dark:text-slate-400">(0/0 topics)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-3 overflow-hidden">
+                    <div id="overallSyllabusBar" class="bg-sky-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- PYQs Mastered -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">PYQs Mastered</span>
+                    <i class="fa-solid fa-circle-check text-emerald-500"></i>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span id="overallPyqPercent" class="text-3xl font-extrabold">0%</span>
+                    <span id="overallPyqRatio" class="text-xs text-slate-500 dark:text-slate-400">(0/0 solved)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-3 overflow-hidden">
+                    <div id="overallPyqBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- PYQs In Progress -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Currently Solving</span>
+                    <i class="fa-solid fa-spinner text-amber-500"></i>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span id="pyqInProgressCount" class="text-3xl font-extrabold">0</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400">active PYQs</span>
+                </div>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-3">Mark topics as 'Solving' when revising.</p>
+            </div>
+
+            <!-- Deployment & Offline Indicator -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">PWA Status</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+                        <i class="fa-solid fa-wifi mr-1"></i> Offline Ready
+                    </span>
+                </div>
+                <div class="text-xs font-medium text-slate-600 dark:text-slate-300">
+                    Saves automatically to LocalStorage
+                </div>
+                <button onclick="openModal('deployModal')" class="mt-3 w-full py-1.5 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-700 dark:text-slate-200 transition text-center">
+                    <i class="fa-brands fa-github mr-1"></i> GitHub Pages Guide
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm space-y-3 md:space-y-0 md:flex md:items-center md:justify-between gap-4">
+            <div class="relative flex-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" placeholder="Search topics, unit questions, or paper terms (e.g., W23, WIPO, ECM, JIT)..." 
+                       class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <select id="subjectFilter" class="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    <option value="ALL">All 5 Subjects</option>
+                    <option value="MET">MET (Mechatronics)</option>
+                    <option value="IEM">IEM (Industrial Engg & Mgmt)</option>
+                    <option value="NCM">NCM (Non-conventional Machining)</option>
+                    <option value="SD">SD (Sustainable Development)</option>
+                    <option value="IPR">IPR (Intellectual Property Rights)</option>
+                </select>
+
+                <select id="statusFilter" class="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    <option value="ALL">All Statuses</option>
+                    <option value="COMPLETED">Completed Topics</option>
+                    <option value="PENDING">Pending Topics</option>
+                    <option value="MASTERED">Mastered PYQs</option>
+                    <option value="SOLVING">In-Progress PYQs</option>
+                </select>
+
+                <select id="termFilter" class="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    <option value="ALL">All Exam Papers</option>
+                    <option value="W22">Winter 2022 (W22)</option>
+                    <option value="W23">Winter 2023 (W23)</option>
+                    <option value="S24">Summer 2024 (S24)</option>
+                    <option value="W24">Winter 2024 (W24)</option>
+                    <option value="S25">Summer 2025 (S25)</option>
+                    <option value="W25">Winter 2025 (W25)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Subject Navigation Tabs -->
+        <div class="border-b border-slate-200 dark:border-slate-800 flex overflow-x-auto space-x-2 pb-1">
+            <button onclick="switchTab('ALL')" id="tab-ALL" class="subject-tab py-2.5 px-4 font-bold text-xs sm:text-sm rounded-t-lg transition whitespace-nowrap border-b-2 border-sky-500 text-sky-600 dark:text-sky-400 bg-sky-50/50 dark:bg-sky-950/30">
+                <i class="fa-solid fa-layer-group mr-1.5"></i> All 5 Subjects Overview
+            </button>
+            <button onclick="switchTab('MET')" id="tab-MET" class="subject-tab py-2.5 px-4 font-semibold text-xs sm:text-sm rounded-t-lg transition whitespace-nowrap text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200">
+                MET (23 Nov)
+            </button>
+            <button onclick="switchTab('IEM')" id="tab-IEM" class="subject-tab py-2.5 px-4 font-semibold text-xs sm:text-sm rounded-t-lg transition whitespace-nowrap text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200">
+                IEM (26 Nov)
+            </button>
+            <button onclick="switchTab('NCM')" id="tab-NCM" class="subject-tab py-2.5 px-4 font-semibold text-xs sm:text-sm rounded-t-lg transition whitespace-nowrap text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200">
+                NCM (28 Nov)
+            </button>
+            <button onclick="switchTab('SD')" id="tab-SD" class="subject-tab py-2.5 px-4 font-semibold text-xs sm:text-sm rounded-t-lg transition whitespace-nowrap text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200">
+                SD (01 Dec)
+            </button>
+            <button onclick="switchTab('IPR')" id="tab-IPR" class="subject-tab py-2.5 px-4 font-semibold text-xs sm:text-sm rounded-t-lg transition whitespace-nowrap text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200">
+                IPR (03 Dec)
+            </button>
+        </div>
+
+        <!-- Subject List Container -->
+        <div id="subjectContainer" class="space-y-8">
+            <!-- Dynamic Content Injected via JavaScript -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-6 bg-white dark:bg-slate-900 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+            <p class="font-semibold">DBATU B.Tech Semester VII Mechanical Engineering Exam Tracker</p>
+            <p class="text-slate-400 dark:text-slate-600">All syllabus units and PYQs mapped strictly according to official Lonere curriculum.</p>
+        </div>
+    </footer>
+
+    <!-- GitHub Deployment Modal -->
+    <div id="deployModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('deployModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center text-xl">
+                    <i class="fa-brands fa-github"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg">Deploy Free on GitHub Pages</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Steps to publish this web application online</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-sm">
+                <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <span class="font-bold text-sky-600 dark:text-sky-400">Step 1: Save HTML File</span>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Save this complete code file onto your computer as <code class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-pink-500 font-mono">index.html</code>.</p>
+                </div>
+
+                <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <span class="font-bold text-sky-600 dark:text-sky-400">Step 2: Create GitHub Repository</span>
+                    <ol class="list-decimal list-inside text-xs text-slate-600 dark:text-slate-300 mt-1 space-y-1">
+                        <li>Log into GitHub and create a new repository (e.g. <code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded">dbatu-sem7-tracker</code>).</li>
+                        <li>Upload your <code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-pink-500">index.html</code> file to the repository.</li>
+                    </ol>
+                </div>
+
+                <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <span class="font-bold text-sky-600 dark:text-sky-400">Step 3: Enable Pages</span>
+                    <ol class="list-decimal list-inside text-xs text-slate-600 dark:text-slate-300 mt-1 space-y-1">
+                        <li>Go to Repository <strong>Settings</strong> &rarr; <strong>Pages</strong>.</li>
+                        <li>Under <em>Build and deployment</em>, set Source to <strong>Deploy from a branch</strong>.</li>
+                        <li>Select <strong>main</strong> branch and click <strong>Save</strong>.</li>
+                        <li>Your site will be live at <code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-emerald-500 font-mono">https://yourusername.github.io/dbatu-sem7-tracker</code>!</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="closeModal('deployModal')" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-medium text-xs rounded-lg transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Logic -->
+    <script>
+        // Exact 5 Subjects Dataset with Corrected Unit Alignments and Realigned PYQs
+        const INITIAL_DATA = {
+            subjects: [
+                {
+                    id: "MET",
+                    code: "BTMC701",
+                    name: "Mechatronics (MET)",
+                    category: "PCC15 • 3 Credits",
+                    examDate: "2026-11-23",
+                    units: [
+                        {
+                            title: "Unit 1: Sensors and Transducers",
+                            topics: [
+                                { id: "met1_1", text: "Introduction to Mechatronic systems, elements, advantages; practical examples" },
+                                { id: "met1_2", text: "Sensors & Transducers: Pressure sensors, Temperature sensors, Velocity sensors" },
+                                { id: "met1_3", text: "Acceleration sensors, Proximity sensors, Position sensors, Force sensors" },
+                                { id: "met1_4", text: "Optical encoders, Capacitive level sensors, Tactile sensors & Selection of sensors" }
+                            ]
+                        },
+                        {
+                            title: "Unit 2: Signal Conditioning and Data Representation",
+                            topics: [
+                                { id: "met2_1", text: "Types of electronic signals, Need for signal processing" },
+                                { id: "met2_2", text: "Operational amplifiers: Types, classification, and applications (Inverting, non-inverting)" },
+                                { id: "met2_3", text: "Opto-isolators, Protection devices, ADC and DAC converters" },
+                                { id: "met2_4", text: "Interfacing devices, Electro-magnetic Relays" },
+                                { id: "met2_5", text: "Data representation systems: Displays, 7-Segment displays, LCD displays, Data loggers, DAQ Cards" }
+                            ]
+                        },
+                        {
+                            title: "Unit 3: Drives (Electrical, Pneumatic & Hydraulic)",
+                            topics: [
+                                { id: "met3_1", text: "Electrical Drives: AC and DC motors, DC servomotors, Stepper motors, Linear motors" },
+                                { id: "met3_2", text: "Pneumatics: Components, actuators, direction control valves, FRL unit, valve actuation" },
+                                { id: "met3_3", text: "Sequencing of Pneumatic cylinders using Cascade and shift register methods" },
+                                { id: "met3_4", text: "Electro-pneumatic valves and circuits (Single and double solenoid methods)" },
+                                { id: "met3_5", text: "Hydraulics: Cylinders, Piston/Rod design, Poppet valve, Hoses/Tubing, Meter-in & Meter-out circuits" }
+                            ]
+                        },
+                        {
+                            title: "Unit 4: Microprocessor, Microcontroller and PLC",
+                            topics: [
+                                { id: "met4_1", text: "8085 Microprocessor: Architecture, registers, instruction sets, interfacing, applications" },
+                                { id: "met4_2", text: "8051 Microcontroller: Architecture, instruction sets, pins & functions, applications" },
+                                { id: "met4_3", text: "PLC: Architecture, I/O types, specifications, selection guidelines" },
+                                { id: "met4_4", text: "PLC Programming: Ladder logic and Function Block Diagram (FBD)" }
+                            ]
+                        },
+                        {
+                            title: "Unit 5: Control Systems and Stability",
+                            topics: [
+                                { id: "met5_1", text: "Open and closed loop systems; Block diagram manipulation & reduction" },
+                                { id: "met5_2", text: "Transfer function & modeling of Mechanical Systems (Spring, Dashpot, Mass equivalence)" },
+                                { id: "met5_3", text: "Stability criteria of systems" },
+                                { id: "met5_4", text: "Controllers: On/Off, Proportional (P), Integral (I), Derivative (D), PI, PD, PID controllers" },
+                                { id: "met5_5", text: "State variable system models & Bode Plots for stability analysis" }
+                            ]
+                        }
+                    ],
+                    pyqs: [
+                        { id: "pq_met_1", unit: "Unit 1", term: "W22,W23", text: "Define Mechatronics with its merits and demerits. Brief in detail any one industrial application of Mechatronics." },
+                        { id: "pq_met_2", unit: "Unit 1", term: "W24", text: "What are the important advantages of mechatronics systems?" },
+                        { id: "pq_met_3", unit: "Unit 1", term: "W25", text: "Explain the role of Mechanical and Electrical components in a Typical Mechatronic system with suitable examples." },
+                        { id: "pq_met_4", unit: "Unit 1", term: "S24", text: "What is the difference between a sensor and transducer? Explain it with specific examples." },
+                        { id: "pq_met_5", unit: "Unit 1", term: "W22", text: "Explain briefly any two of the following transducers: a. LVDT b. Optical Encoder c. Strain Gauges." },
+                        { id: "pq_met_6", unit: "Unit 1", term: "W22", text: "Explain various Force Sensors with industrial applications." },
+                        { id: "pq_met_7", unit: "Unit 1", term: "W23", text: "Explain with neat sketch working principle of strain gauges. How it can be used as pressure transducer?" },
+                        { id: "pq_met_8", unit: "Unit 1", term: "W23", text: "Explain electromagnetic frequency domain transducer with neat sketch." },
+                        { id: "pq_met_9", unit: "Unit 1", term: "S24", text: "How a capacitive level sensor works? Give its applications." },
+                        { id: "pq_met_10", unit: "Unit 1", term: "W24", text: "How a capacitive proximity sensor works? Explain any one proximity sensor with a neat sketch." },
+                        { id: "pq_met_11", unit: "Unit 1", term: "W25", text: "Explain any three temperature sensors with their principle, advantages, limitations and applications." },
+                        { id: "pq_met_12", unit: "Unit 2", term: "W23", text: "Explain Digital signal with its advantages, disadvantages, and applications." },
+                        { id: "pq_met_13", unit: "Unit 2", term: "W23", text: "Describe the operational amplifier in detail." },
+                        { id: "pq_met_14", unit: "Unit 2", term: "S24,W22", text: "Describe the Data Acquisition System with a block diagram. List any two practical examples." },
+                        { id: "pq_met_15", unit: "Unit 2", term: "S24,W24,W22", text: "Draw a neat diagram of a Seven segment display system? How a seven segment display works?" },
+                        { id: "pq_met_16", unit: "Unit 2", term: "W22,W24,W23", text: "What is the need for signal conditioning? What are the operations performed by the signal conditioner?" },
+                        { id: "pq_met_17", unit: "Unit 2", term: "W25", text: "Explain the inverting operational amplifier in details." },
+                        { id: "pq_met_18", unit: "Unit 2", term: "W25", text: "What is the purpose of a protection device in an electronics circuit? Explain Opto-isolator as a protection device." },
+                        { id: "pq_met_19", unit: "Unit 2", term: "W22", text: "Explain Analog to Digital Conversion and describe any one method of ADC with block diagram." },
+                        { id: "pq_met_20", unit: "Unit 3", term: "W23", text: "Explain working principle of stepper motor with neat sketch. Give its classification." },
+                        { id: "pq_met_21", unit: "Unit 3", term: "W25", text: "Write short note on 'Servo motors'." },
+                        { id: "pq_met_22", unit: "Unit 3", term: "W22,S24", text: "Explain DC Motor with its working, advantages and industrial applications in Mechatronic domain." },
+                        { id: "pq_met_23", unit: "Unit 3", term: "W23", text: "What are the various types of pressure control valves used in hydraulic systems? Explain any one." },
+                        { id: "pq_met_24", unit: "Unit 3", term: "W23", text: "Explain pneumatic air preparation and significance of FRL unit." },
+                        { id: "pq_met_25", unit: "Unit 3", term: "S24,W22", text: "Explain the sequencing of pneumatic cylinders using cascade method." },
+                        { id: "pq_met_26", unit: "Unit 3", term: "S24", text: "Give the comparison between pneumatic systems and hydraulic systems." },
+                        { id: "pq_met_27", unit: "Unit 3", term: "W24", text: "Compare physical components of hydraulic and pneumatic systems." },
+                        { id: "pq_met_28", unit: "Unit 3", term: "W24", text: "Explain the controlling of a double-acting cylinder with a suitable pneumatic circuit." },
+                        { id: "pq_met_29", unit: "Unit 3", term: "W24", text: "Why are cascaded system circuits preferred for multi-cylinder control problems?" },
+                        { id: "pq_met_30", unit: "Unit 3", term: "W25", text: "Explain classification of pneumatic valves based on number of ports and positions." },
+                        { id: "pq_met_31", unit: "Unit 3", term: "W25", text: "Design a pneumatic circuit for achieving sequence of operation: A+ B+ B- A-." },
+                        { id: "pq_met_32", unit: "Unit 3", term: "W22", text: "Explain different types of directional control valves with neat sketches." },
+                        { id: "pq_met_33", unit: "Unit 4", term: "W23", text: "What are the addressing modes of the 8085 microprocessor?" },
+                        { id: "pq_met_34", unit: "Unit 4", term: "W23,W25", text: "What do you mean by microcontroller? Differentiate between microcontroller and microprocessor." },
+                        { id: "pq_met_35", unit: "Unit 4", term: "W25", text: "Explain the architecture of a typical microcontroller." },
+                        { id: "pq_met_36", unit: "Unit 4", term: "S24,W23,W24", text: "Explain block diagram of 8085 microprocessor and its architecture with suitable sketch." },
+                        { id: "pq_met_37", unit: "Unit 4", term: "S24,W22", text: "Describe Programmable Logic Controller (PLC) with block diagram and industrial application." },
+                        { id: "pq_met_38", unit: "Unit 4", term: "W24", text: "What are the guidelines used for selection of Programmable Logic Controllers (PLCs)?" },
+                        { id: "pq_met_39", unit: "Unit 4", term: "W24", text: "How Ladder Logic programming technique is used for programming of PLCs? Explain with example." },
+                        { id: "pq_met_40", unit: "Unit 4", term: "W25", text: "Write ladder logic for level controller of overhead tank (pump starts when low, stops when full)." },
+                        { id: "pq_met_41", unit: "Unit 5", term: "W25,W23", text: "Explain and differentiate open loop and closed loop control systems with suitable examples." },
+                        { id: "pq_met_42", unit: "Unit 5", term: "S24", text: "Why a Closed Loop Control System is preferred? Explain with a suitable example." },
+                        { id: "pq_met_43", unit: "Unit 5", term: "S24", text: "Explain with a neat sketch On/Off Controller." },
+                        { id: "pq_met_44", unit: "Unit 5", term: "W24", text: "How an integral controller works? Explain with an example." },
+                        { id: "pq_met_45", unit: "Unit 5", term: "S24", text: "What is the significance of a Proportional-Derivative (PD) Controller? Explain with application." },
+                        { id: "pq_met_46", unit: "Unit 5", term: "W23,S24,W24,W25", text: "What is a PID controller? Explain working, advantages, limitations and applications of PID controller." },
+                        { id: "pq_met_47", unit: "Unit 5", term: "W23,W24", text: "Define transfer function. Explain procedure to determine transfer function of a control system." },
+                        { id: "pq_met_48", unit: "Unit 5", term: "S24", text: "Derive model equation of a mechanical system for mass and spring." },
+                        { id: "pq_met_49", unit: "Unit 5", term: "W22", text: "Define Transfer Function and determine C(s)/R(s) of given system by block diagram reduction method." },
+                        { id: "pq_met_50", unit: "Unit 5", term: "W25", text: "Find overall transfer function C(s)/R(s) for the block diagram control system shown in paper." }
+                    ]
+                },
+                {
+                    id: "IEM",
+                    code: "BTHM702",
+                    name: "Industrial Engineering and Management (IEM)",
+                    category: "HSSMC4 • 3 Credits",
+                    examDate: "2026-11-26",
+                    units: [
+                        {
+                            title: "Unit 1: Introduction to Management & Planning",
+                            topics: [
+                                { id: "iem1_1", text: "Managing and managers, science, theory and practice, evolution of management theory" },
+                                { id: "iem1_2", text: "Contributions of F.W. Taylor, Henri Fayol, Gilbreth, Gantt and others" },
+                                { id: "iem1_3", text: "Planning: Nature, purpose, objectives, strategies, policies, decision making" },
+                                { id: "iem1_4", text: "Organizing: Departmentation, Line/Staff authority, decentralization, organizational structure" }
+                            ]
+                        },
+                        {
+                            title: "Unit 2: Human Resource Management & Control",
+                            topics: [
+                                { id: "iem2_1", text: "Staffing: HRM selection, orientation, apprentice training & Apprentice Act (1961)" },
+                                { id: "iem2_2", text: "Performance appraisal, career strategy, job evaluation, merit rating, incentive schemes" },
+                                { id: "iem2_3", text: "Leading: Motivation, leadership, morale, team building, communication" },
+                                { id: "iem2_4", text: "Controlling: Systems & processes, control techniques, overall & preventive control" }
+                            ]
+                        },
+                        {
+                            title: "Unit 3: Production/Operations Management",
+                            topics: [
+                                { id: "iem3_1", text: "Operations management in corporate profitability & competitiveness" },
+                                { id: "iem3_2", text: "Manufacturing & Service systems: Types, characteristics, FMS" },
+                                { id: "iem3_3", text: "Operations Planning & Control: Forecasting techniques, Materials Requirement Planning (MRP)" },
+                                { id: "iem3_4", text: "Operations scheduling (Forward/Backward scheduling)" }
+                            ]
+                        },
+                        {
+                            title: "Unit 4: Design of Operational Systems",
+                            topics: [
+                                { id: "iem4_1", text: "Product/Process design, technological choice, product design flow chart" },
+                                { id: "iem4_2", text: "Capacity planning & Plant location strategic choice factors" },
+                                { id: "iem4_3", text: "Facilities Layout: Product, Process, Fixed position layouts" },
+                                { id: "iem4_4", text: "Assembly line balancing methods to reduce idle time" }
+                            ]
+                        },
+                        {
+                            title: "Unit 5: Industrial Engineering, Ergonomics & TQM",
+                            topics: [
+                                { id: "iem5_1", text: "Work Study & Method Study: Charting techniques, workplace design, motion economy principles" },
+                                { id: "iem5_2", text: "Work Measurement: Stopwatch time study, micromotion study, Therbligs, PTS, work sampling" },
+                                { id: "iem5_3", text: "Ergonomics: Basic principles & human factor integration" },
+                                { id: "iem5_4", text: "Concurrent Engineering: Producibility, manufacturability, productivity improvement" },
+                                { id: "iem5_5", text: "TQM: Just in Time (JIT), Total Quality Control, Quality Circles, Six Sigma" }
+                            ]
+                        }
+                    ],
+                    pyqs: [
+                        { id: "pq_iem_1", unit: "Unit 1", term: "S24", text: "What is the significance of Industrial Engineering in productivity improvement?" },
+                        { id: "pq_iem_2", unit: "Unit 1", term: "W23,W25", text: "What is Industrial Engineering? Explain the roles of an Industrial Engineer." },
+                        { id: "pq_iem_3", unit: "Unit 1", term: "W22,W23,W24", text: "Define management. Explain nature, characteristics, objectives and functions of management." },
+                        { id: "pq_iem_4", unit: "Unit 1", term: "W22,S24", text: "What are the aims of Scientific management? Explain concept of scientific management by F.W. Taylor." },
+                        { id: "pq_iem_5", unit: "Unit 1", term: "W22", text: "Explain the importance of 'planning' for higher productivity." },
+                        { id: "pq_iem_6", unit: "Unit 1", term: "W25", text: "What is organizing? Explain departmentation, line and staff authority, and decentralization." },
+                        { id: "pq_iem_7", unit: "Unit 1", term: "W24", text: "Explain various advantages of decentralization of authority." },
+                        { id: "pq_iem_8", unit: "Unit 1", term: "W23", text: "Differentiate between line organization and staff organization." },
+                        { id: "pq_iem_9", unit: "Unit 1", term: "S24", text: "Enlist various forms of organization structures and describe any one with advantages/disadvantages." },
+                        { id: "pq_iem_10", unit: "Unit 2", term: "W22,S24", text: "Explain in detail objectives of Human Resource Management & challenges faced by effective HRM." },
+                        { id: "pq_iem_11", unit: "Unit 2", term: "S24,W24,W25", text: "What is performance appraisal? Explain characteristics of a sound appraisal system & career planning." },
+                        { id: "pq_iem_12", unit: "Unit 2", term: "W23,W25", text: "Explain the staffing process: recruitment, selection, orientation & Apprentice Act (1961)." },
+                        { id: "pq_iem_13", unit: "Unit 2", term: "W23,W25", text: "Describe merit rating and incentive schemes. Explain objectives of merit rating." },
+                        { id: "pq_iem_14", unit: "Unit 2", term: "S24", text: "What do you understand by job evaluation? How does it benefit an industry?" },
+                        { id: "pq_iem_15", unit: "Unit 2", term: "W23", text: "What is motivation? How does it help in improving productivity?" },
+                        { id: "pq_iem_16", unit: "Unit 2", term: "W24", text: "Briefly explain how team building and communication help managers in effective leadership." },
+                        { id: "pq_iem_17", unit: "Unit 2", term: "W22", text: "Why preventive control is recommended over direct (Overall) control?" },
+                        { id: "pq_iem_18", unit: "Unit 3", term: "W23,S24,W25", text: "What are different types of manufacturing systems? Explain with sketches & production environment suitability." },
+                        { id: "pq_iem_19", unit: "Unit 3", term: "W22", text: "Explain in brief Flexible Manufacturing System (FMS)." },
+                        { id: "pq_iem_20", unit: "Unit 3", term: "W22,W24", text: "What are the different characteristics of service systems?" },
+                        { id: "pq_iem_21", unit: "Unit 3", term: "S24,W22", text: "What do you understand by operations management? Write note on operations planning and control." },
+                        { id: "pq_iem_22", unit: "Unit 3", term: "W23,W25", text: "Explain forecasting and different forecasting techniques used in operations planning." },
+                        { id: "pq_iem_23", unit: "Unit 3", term: "W23,W24,W25", text: "What is Materials Requirement Planning (MRP)? Explain MRP with neat sketch." },
+                        { id: "pq_iem_24", unit: "Unit 3", term: "W22", text: "What is operation scheduling? Explain forward scheduling in detail." },
+                        { id: "pq_iem_25", unit: "Unit 4", term: "S24,W25", text: "Enlist and explain various steps involved in product design process with flow chart." },
+                        { id: "pq_iem_26", unit: "Unit 4", term: "S24", text: "Distinguish between product and process layout with neat sketch." },
+                        { id: "pq_iem_27", unit: "Unit 4", term: "W22,W23,S24,W25", text: "What is capacity planning? Explain significance, activities, and major factors influencing strategic choices." },
+                        { id: "pq_iem_28", unit: "Unit 4", term: "W23,W25", text: "Describe plant location decisions and major factors influencing selection of plant location." },
+                        { id: "pq_iem_29", unit: "Unit 4", term: "W23,W24,W25", text: "Explain facilities layout types and assembly line balancing methods to improve productivity." },
+                        { id: "pq_iem_30", unit: "Unit 4", term: "S24", text: "What is line balancing? Explain the methods of line balancing." },
+                        { id: "pq_iem_31", unit: "Unit 5", term: "W22,W23,W24", text: "What is ergonomics? Write the basic principles of ergonomics." },
+                        { id: "pq_iem_32", unit: "Unit 5", term: "W25", text: "Explain in detail charting techniques and principles of motion economy with neat sketch." },
+                        { id: "pq_iem_33", unit: "Unit 5", term: "W22,S24", text: "Explain the concept of Just in Time (JIT) in detail and give its advantages." },
+                        { id: "pq_iem_34", unit: "Unit 5", term: "W23,W24,W25", text: "Explain how JIT, Quality Circles, and Six Sigma contribute to productivity under Total Quality Management." },
+                        { id: "pq_iem_35", unit: "Unit 5", term: "W22,W23", text: "Explain method study procedure and objectives. How does it differ from work measurement?" },
+                        { id: "pq_iem_36", unit: "Unit 5", term: "W22,S24", text: "List down steps in conducting stopwatch time study and enlist work measurement techniques." },
+                        { id: "pq_iem_37", unit: "Unit 5", term: "W22,S24", text: "What is significance of micro motion study? Give procedure and explain Therbligs with symbols." },
+                        { id: "pq_iem_38", unit: "Unit 5", term: "W25", text: "What do you understand by work measurement? Explain Predetermined Time System (PTS)." }
+                    ]
+                },
+                {
+                    id: "NCM",
+                    code: "BTMPE703C",
+                    name: "Non-Conventional Machining (NCM)",
+                    category: "PEC5 • 3 Credits",
+                    examDate: "2026-11-28",
+                    units: [
+                        {
+                            title: "Unit 1: Overview & Classification",
+                            topics: [
+                                { id: "ncm1_1", text: "Overview & trends in manufacturing; Need for non-conventional machining" },
+                                { id: "ncm1_2", text: "Classification of NCM processes based on major energy source employed" },
+                                { id: "ncm1_3", text: "Mechanism of material removal & limitations of conventional machining" },
+                                { id: "ncm1_4", text: "Selection factors & recommending advanced machining processes for glass cutting/hole making" }
+                            ]
+                        },
+                        {
+                            title: "Unit 2: Chemical & Electrochemical Processes",
+                            topics: [
+                                { id: "ncm2_1", text: "Chemical Machining (CHM): Maskants (cut & peel vs photographic), Etchants" },
+                                { id: "ncm2_2", text: "Electrochemical Machining (ECM): Principle, limitations, applications, electrolyte functions" },
+                                { id: "ncm2_3", text: "Electrochemical Grinding (ECG) vs ECM material removal mechanism" },
+                                { id: "ncm2_4", text: "Electrochemical Deburring (ECDe) & Electrochemical Honing (ECH)" }
+                            ]
+                        },
+                        {
+                            title: "Unit 3: Thermo-Electrical Processes",
+                            topics: [
+                                { id: "ncm3_1", text: "Electrical Discharge Machining (EDM): MRR, surface finish, process parameters" },
+                                { id: "ncm3_2", text: "Electron Beam Machining (EBM): Need & mechanism of metal removal" },
+                                { id: "ncm3_3", text: "Plasma Arc Machining (PAM): Transferred & non-transferred modes, process parameters" },
+                                { id: "ncm3_4", text: "Ion Beam Machining (IBM) & Hot Machining: Construction, working, applications" }
+                            ]
+                        },
+                        {
+                            title: "Unit 4: Mechanical Processes",
+                            topics: [
+                                { id: "ncm4_1", text: "Ultrasonic Machining (USM): Process parameters (amplitude, frequency, static load, grit size)" },
+                                { id: "ncm4_2", text: "Abrasive Jet Machining (AJM): Working principle and parametric influence" },
+                                { id: "ncm4_3", text: "Abrasive Flow Machining (AFM) and Water Jet Cutting (WJC)" }
+                            ]
+                        },
+                        {
+                            title: "Unit 5: Laser Based & Hybrid Processes",
+                            topics: [
+                                { id: "ncm5_1", text: "Laser Beam Machining (LBM): Laser generation, process characteristics & applications" },
+                                { id: "ncm5_2", text: "Hybrid Processes: Wire EDM (WEDM), STEM, ELID grinding" },
+                                { id: "ncm5_3", text: "Micro Machining: Micro EDM, Micro ECM, Electro discharge chemical grinding (EDCG)" }
+                            ]
+                        }
+                    ],
+                    pyqs: [
+                        { id: "pq_ncm_1", unit: "Unit 1", term: "W23", text: "List and explain various factors to be considered for selection of machining process." },
+                        { id: "pq_ncm_2", unit: "Unit 1", term: "W24", text: "Discuss the factors to be considered while selecting the non-conventional machining processes." },
+                        { id: "pq_ncm_3", unit: "Unit 1", term: "W24", text: "Explain classification of unconventional machining according to major energy source. State importance." },
+                        { id: "pq_ncm_4", unit: "Unit 1", term: "S25", text: "Classify modern machining processes on basis of energy type employed & material removal mechanism." },
+                        { id: "pq_ncm_5", unit: "Unit 1", term: "S24", text: "How the unconventional machining processes are classified?" },
+                        { id: "pq_ncm_6", unit: "Unit 1", term: "W23,S24", text: "Discuss in detail the various limitations of conventional machining processes." },
+                        { id: "pq_ncm_7", unit: "Unit 1", term: "S24", text: "Justify the need of non-conventional machining in today's Industries." },
+                        { id: "pq_ncm_8", unit: "Unit 1", term: "W23", text: "How material developments are responsible for evolution of Advanced Machining Techniques?" },
+                        { id: "pq_ncm_9", unit: "Unit 1", term: "S25", text: "Recommend advanced machining process for: (A) cutting glass plate (B) making hole in MS workpiece." },
+                        { id: "pq_ncm_10", unit: "Unit 2", term: "S25", text: "Explain mechanism of material removal during ECG and how it is different from ECM." },
+                        { id: "pq_ncm_11", unit: "Unit 2", term: "S25", text: "Write names of 2 components from 2 different industries where ECDe can be applied." },
+                        { id: "pq_ncm_12", unit: "Unit 2", term: "W23,W24", text: "Explain different types of maskants and etchants used in chemical machining process." },
+                        { id: "pq_ncm_13", unit: "Unit 2", term: "W23,S24", text: "Write down limitations, applications, and advantages of CHM over ECM process." },
+                        { id: "pq_ncm_14", unit: "Unit 2", term: "W23,S24", text: "Sketch and explain Electro-chemical Honing and Electro-chemical Deburring." },
+                        { id: "pq_ncm_15", unit: "Unit 2", term: "S24", text: "Differentiate between cut & peel resists and photographic resists." },
+                        { id: "pq_ncm_16", unit: "Unit 3", term: "S24,S25", text: "Discuss merits of EDM with respect to MRR and surface finish." },
+                        { id: "pq_ncm_17", unit: "Unit 3", term: "S24", text: "Explain non-transferred and transferred mode of plasma arc." },
+                        { id: "pq_ncm_18", unit: "Unit 3", term: "W23", text: "Explain need for EBM and mechanism of metal removal in Electron Beam Machining (EBM)." },
+                        { id: "pq_ncm_19", unit: "Unit 3", term: "W23,S25", text: "What do you understand by Hot Machining? State its applications and limitations." },
+                        { id: "pq_ncm_20", unit: "Unit 3", term: "W23,W24", text: "Explain with neat diagram construction and working principle of Plasma Arc Machining (PAM)." },
+                        { id: "pq_ncm_21", unit: "Unit 3", term: "W24", text: "What are main functions of electrolysis in ECM? How current density affects material removal rate?" },
+                        { id: "pq_ncm_22", unit: "Unit 3", term: "S25", text: "Explain Ion Beam Machining with a neat sketch." },
+                        { id: "pq_ncm_23", unit: "Unit 4", term: "W24", text: "Explain with a neat sketch the working principle and parametric influence of abrasive jet machining." },
+                        { id: "pq_ncm_24", unit: "Unit 4", term: "W24", text: "List process parameters of USM and explain effect of amplitude, frequency, static load, grit size on MRR." }
+                    ]
+                },
+                {
+                    id: "SD",
+                    code: "BTMOE704A",
+                    name: "Sustainable Development (SD)",
+                    category: "OEC3 • 3 Credits",
+                    examDate: "2026-12-01",
+                    units: [
+                        {
+                            title: "Unit 1: Introduction, Environment & Social Issues",
+                            topics: [
+                                { id: "sd1_1", text: "Status of environment, Environmental, Social & Economic issues" },
+                                { id: "sd1_2", text: "Need for sustainability & nine ways to achieve sustainability" },
+                                { id: "sd1_3", text: "Population, resources, development and environment relationship" },
+                                { id: "sd1_4", text: "Social & economic issues: Poverty, inequality, unemployment and underemployment" },
+                                { id: "sd1_5", text: "Environmental issues: Biodiversity loss, deforestation, water scarcity" }
+                            ]
+                        },
+                        {
+                            title: "Unit 2: Global Warming and Climate Change",
+                            topics: [
+                                { id: "sd2_1", text: "Global Warming & climate change trends since industrial revolution" },
+                                { id: "sd2_2", text: "Greenhouse gas emissions, greenhouse effect (mechanism, pros & cons, adverse impacts)" },
+                                { id: "sd2_3", text: "Renewable energy sources: Solar energy, Hydropower, Geothermal energy" },
+                                { id: "sd2_4", text: "Contribution of renewable energy transition to reducing GHG emissions" }
+                            ]
+                        },
+                        {
+                            title: "Unit 3: Governing Factors, Determinants & Linkages",
+                            topics: [
+                                { id: "sd3_1", text: "Factors governing sustainable development (Economic efficiency, Social equity, Governance)" },
+                                { id: "sd3_2", text: "Key linkages: Equity & economic growth, Sustainable consumption, Health & SD" },
+                                { id: "sd3_3", text: "Determinants of SD: Environmental protection, Good governance, Education & awareness" },
+                                { id: "sd3_4", text: "Materials and energy flows mechanism and importance in sustainable development" }
+                            ]
+                        },
+                        {
+                            title: "Unit 4: Indicators, Environmental Assessment & NEPA",
+                            topics: [
+                                { id: "sd4_1", text: "Need & importance of indicators (Measurement, evaluation, benchmarking, early warning)" },
+                                { id: "sd4_2", text: "Statistical procedures for aggregating indicators (Weighted averages, PCA, Index construction)" },
+                                { id: "sd4_3", text: "Three environmental quality indices & overall environmental health assessment" },
+                                { id: "sd4_4", text: "National Environmental Policy Act (NEPA) of 1969 features & scope" },
+                                { id: "sd4_5", text: "Environmental Impact Assessment (EIA): Purpose, project categories, methods & detailed process" }
+                            ]
+                        },
+                        {
+                            title: "Unit 5: Environmental Management, Sector Policies & Society",
+                            topics: [
+                                { id: "sd5_1", text: "Associated environmental policies of key sectors (Energy, Transport, Waste, Agriculture)" },
+                                { id: "sd5_2", text: "Participatory development principles: Inclusivity, Empowerment, Collaboration" },
+                                { id: "sd5_3", text: "Institutional framework for environmental management" },
+                                { id: "sd5_4", text: "Role of NGOs in environmental management" },
+                                { id: "sd5_5", text: "Impact of People's perception about environment, Gender, Indigenous peoples & social exclusion" }
+                            ]
+                        }
+                    ],
+                    pyqs: [
+                        { id: "pq_sd_1", unit: "Unit 1", term: "S24,W23", text: "Describe environmental issues related to SD: 1. Biodiversity loss 2. Deforestation 3. Water Scarcity." },
+                        { id: "pq_sd_2", unit: "Unit 1", term: "S24", text: "Discuss social and economic issues: 1. Poverty 2. Inequality 3. Unemployment and Underemployment." },
+                        { id: "pq_sd_3", unit: "Unit 1", term: "S24,W23", text: "Explain the relationship between population and resources." },
+                        { id: "pq_sd_4", unit: "Unit 1", term: "S25", text: "'Sustainable Development helps to solve Environmental, Social and Economic issues.' Justify." },
+                        { id: "pq_sd_5", unit: "Unit 1", term: "W23", text: "Discuss 6 of 9 ways to achieve sustainability (Renewable transition, Efficiency, Transport, Waste, etc.)." },
+                        { id: "pq_sd_6", unit: "Unit 1", term: "W24", text: "What is sustainability? How SD helps to balance Environmental, Social and Economic issues?" },
+                        { id: "pq_sd_7", unit: "Unit 2", term: "S24,W23,W24", text: "Explain how global warming and climate change have been impacted by Industrial Revolution." },
+                        { id: "pq_sd_8", unit: "Unit 2", term: "S24,W23", text: "What are the adverse effects of global warming on the environment?" },
+                        { id: "pq_sd_9", unit: "Unit 2", term: "S24,W23", text: "Explain prominent renewable energy sources: Solar Energy, Hydropower, Geothermal Energy." },
+                        { id: "pq_sd_10", unit: "Unit 2", term: "S25", text: "What are greenhouse gases, and what role do they play in the greenhouse effect?" },
+                        { id: "pq_sd_11", unit: "Unit 2", term: "S25", text: "How does renewable energy contribute to reducing greenhouse gas emissions and combating climate change?" },
+                        { id: "pq_sd_12", unit: "Unit 2", term: "W24", text: "Explain the advantages and disadvantages of greenhouse effect." },
+                        { id: "pq_sd_13", unit: "Unit 3", term: "S24,W23,W24", text: "Explain factors governing SD: Economic Efficiency, Social Equity, Institutional Governance." },
+                        { id: "pq_sd_14", unit: "Unit 3", term: "S24,W23", text: "Explain key linkages: 1. Equity & growth 2. Sustainable consumption/production 3. Health & SD." },
+                        { id: "pq_sd_15", unit: "Unit 3", term: "S24,W23,S25", text: "Describe key determinants contributing to SD: Protection, Good Governance, Education." },
+                        { id: "pq_sd_16", unit: "Unit 3", term: "W24", text: "Explain mechanism and importance of Materials and energy flows in sustainable development." },
+                        { id: "pq_sd_17", unit: "Unit 4", term: "S24,W23,W24", text: "Why indicators are crucial for SD? (Measurement, Evaluation, Benchmarking, Early Warning)." },
+                        { id: "pq_sd_18", unit: "Unit 4", term: "S24,W23", text: "Explain statistical procedures aggregating indicators: Weighted Averages, PCA, Index Construction." },
+                        { id: "pq_sd_19", unit: "Unit 4", term: "S24,W23,S25", text: "Which are the three environmental quality indices? Explain their role." },
+                        { id: "pq_sd_20", unit: "Unit 4", term: "S25,W24", text: "What is purpose of Environmental Impact Assessment (EIA)? Explain EIA process in detail." },
+                        { id: "pq_sd_21", unit: "Unit 4", term: "S25,W24", text: "Write salient features and scope of National Environmental Policy Act (NEPA) of 1969." },
+                        { id: "pq_sd_22", unit: "Unit 5", term: "S24,W23", text: "Explain key steps in Environmental Impact Assessment process." },
+                        { id: "pq_sd_23", unit: "Unit 5", term: "S24,W23", text: "Explain environmental policies of key sectors: Energy, Transportation, Waste, Agriculture." },
+                        { id: "pq_sd_24", unit: "Unit 5", term: "S24,W23", text: "Explain principles of participatory development: Inclusivity, Empowerment, Collaboration." },
+                        { id: "pq_sd_25", unit: "Unit 5", term: "S25,W24", text: "What is the Role of NGOs in environmental management?" },
+                        { id: "pq_sd_26", unit: "Unit 5", term: "S25", text: "What is the impact of People's perception about environment?" },
+                        { id: "pq_sd_27", unit: "Unit 5", term: "W24", text: "How will be the Institutional framework for environmental management? Explain." }
+                    ]
+                },
+                {
+                    id: "IPR",
+                    code: "BTMOE705C",
+                    name: "Intellectual Property Rights (IPR)",
+                    category: "OEC4 • 3 Credits",
+                    examDate: "2026-12-03",
+                    units: [
+                        {
+                            title: "Unit 1: Introduction to Intellectual Property",
+                            topics: [
+                                { id: "ipr1_1", text: "Concept & types of IPR with practical examples" },
+                                { id: "ipr1_2", text: "Intellectual property as valuable business assets" },
+                                { id: "ipr1_3", text: "International organizations: WIPO & USPTO roles" },
+                                { id: "ipr1_4", text: "Functions and key treaties managed by WIPO" }
+                            ]
+                        },
+                        {
+                            title: "Unit 2: Trade Marks",
+                            topics: [
+                                { id: "ipr2_1", text: "Trademark definition, purpose, types, and functions" },
+                                { id: "ipr2_2", text: "Good qualities of trademark & protectable matter" },
+                                { id: "ipr2_3", text: "Procedure for acquisition & registration of Trademark in India (Trademarks Act 1999)" },
+                                { id: "ipr2_4", text: "Difference between Trademark and Industrial Design" }
+                            ]
+                        },
+                        {
+                            title: "Unit 3: Law of Copy Rights",
+                            topics: [
+                                { id: "ipr3_1", text: "Copyright law foundations & protectable creations" },
+                                { id: "ipr3_2", text: "Originality of material & copyright registration steps" },
+                                { id: "ipr3_3", text: "Rights of Reproduction & Right to Perform Work Publicly" },
+                                { id: "ipr3_4", text: "Copyright Act 1957 sections, ownership issues & international copyright" }
+                            ]
+                        },
+                        {
+                            title: "Unit 4: Law of Patents and Trade Secrets",
+                            topics: [
+                                { id: "ipr4_1", text: "Patentability criteria (Novelty, Non-obviousness, Utility) & Patent Act 1970" },
+                                { id: "ipr4_2", text: "Design Patents vs Utility Patents; National & International patent search" },
+                                { id: "ipr4_3", text: "Procedure for filing patent applications in India & ownership transfers" },
+                                { id: "ipr4_4", text: "Trade Secrets: Definition, status determination, internal/external threats & litigation" }
+                            ]
+                        },
+                        {
+                            title: "Unit 5: New Development of Intellectual Property",
+                            topics: [
+                                { id: "ipr5_1", text: "Recent developments & amendments in Indian Trademark & Copyright Laws" },
+                                { id: "ipr5_2", text: "Recent amendments in Indian Patent Laws (last 5 years)" },
+                                { id: "ipr5_3", text: "Intellectual Property (IP) Audit: Need, scope, and implementation steps" },
+                                { id: "ipr5_4", text: "International overview of emerging IP laws & enforcement" }
+                            ]
+                        }
+                    ],
+                    pyqs: [
+                        { id: "pq_ipr_1", unit: "Unit 1", term: "S24,S25,W23,W24,W25", text: "What is Intellectual Property Rights (IPR)? What are different types of IPR with examples?" },
+                        { id: "pq_ipr_2", unit: "Unit 1", term: "S24", text: "Intellectual properties are valuable assets. Explain." },
+                        { id: "pq_ipr_3", unit: "Unit 1", term: "S24,W23", text: "Explain the various importances of intellectual property rights." },
+                        { id: "pq_ipr_4", unit: "Unit 1", term: "W25", text: "State names of International organizations and their role in intellectual property right." },
+                        { id: "pq_ipr_5", unit: "Unit 1", term: "S25", text: "Write a note on World Intellectual Property Organization (WIPO)." },
+                        { id: "pq_ipr_6", unit: "Unit 1", term: "W24", text: "Explain in brief functions and key treaties managed by WIPO." },
+                        { id: "pq_ipr_7", unit: "Unit 1", term: "W23", text: "Explain in detail about United States Patents and Trademark Office (USPTO)." },
+                        { id: "pq_ipr_8", unit: "Unit 2", term: "S24,W24", text: "What is Trademark? Explain different types of trademarks with examples." },
+                        { id: "pq_ipr_9", unit: "Unit 2", term: "S24,S25", text: "What is Trademark? Explain purpose and functions of Trademarks." },
+                        { id: "pq_ipr_10", unit: "Unit 2", term: "W25", text: "Define good qualities of trademark with examples." },
+                        { id: "pq_ipr_11", unit: "Unit 2", term: "S24", text: "Differentiate between Trademark and design. Process of registering a trademark?" },
+                        { id: "pq_ipr_12", unit: "Unit 2", term: "W24", text: "Explain with flow chart procedure for acquisition of Trademark in India." },
+                        { id: "pq_ipr_13", unit: "Unit 2", term: "S25", text: "Explain key features of 'Trademarks Act, 1999'." },
+                        { id: "pq_ipr_14", unit: "Unit 2", term: "W23,W25", text: "Explain protectable matter and acquisition of trademark rights." },
+                        { id: "pq_ipr_15", unit: "Unit 3", term: "S24", text: "Explain copyright law and when it was founded?" },
+                        { id: "pq_ipr_16", unit: "Unit 3", term: "S25,W24,W25", text: "Which types of creations can be protected as copyright? Give examples and applications." },
+                        { id: "pq_ipr_17", unit: "Unit 3", term: "W25", text: "What are different steps involved in copyright registration process?" },
+                        { id: "pq_ipr_18", unit: "Unit 3", term: "S24,S25,W23,W24", text: "Elaborate 'Rights of Reproduction' and 'Right to Perform Work Publicly'." },
+                        { id: "pq_ipr_19", unit: "Unit 3", term: "W23", text: "Explain originality of material with example." },
+                        { id: "pq_ipr_20", unit: "Unit 3", term: "S24", text: "Short note on: i) copyright ownership issues ii) International copyright law." },
+                        { id: "pq_ipr_21", unit: "Unit 3", term: "S25,W24,W25", text: "Discuss any three sections of the 'Copyright Act, 1957'." },
+                        { id: "pq_ipr_22", unit: "Unit 4", term: "S24,S25", text: "Define Patentability? What are criteria for patentability & utility of patents?" },
+                        { id: "pq_ipr_23", unit: "Unit 4", term: "W24", text: "Define patent. Enlist criteria and explain Design Patents vs Utility Patents." },
+                        { id: "pq_ipr_24", unit: "Unit 4", term: "W25", text: "How to search patent on national and international platform? Benefits?" },
+                        { id: "pq_ipr_25", unit: "Unit 4", term: "S24,S25", text: "Discuss steps involved in procedure for filing patents in India." },
+                        { id: "pq_ipr_26", unit: "Unit 4", term: "S24,S25,W24", text: "Give overview of Patent Act, 1970 and how it protects the Patentee." },
+                        { id: "pq_ipr_27", unit: "Unit 4", term: "W23,W24,W25", text: "Explain Trade Secrets, status determination, internal/external threats & litigation." },
+                        { id: "pq_ipr_28", unit: "Unit 5", term: "W24", text: "Write note on 'International Trademark law'." },
+                        { id: "pq_ipr_29", unit: "Unit 5", term: "S24,S25,W23,W25", text: "Discuss new developments & amendments in Trademark and Copyright laws in India." },
+                        { id: "pq_ipr_30", unit: "Unit 5", term: "S24,W23,W25", text: "Explain at least 3 amendments in patent laws in last 5 years in India." },
+                        { id: "pq_ipr_31", unit: "Unit 5", term: "W24,S25", text: "Explain in detail 'Intellectual Property (IP) Audit' and steps involved." }
+                    ]
+                }
+            ],
+            progress: {},
+            notes: {}
+        };
+
+        // App state initialized from LocalStorage
+        let appState = JSON.parse(localStorage.getItem('dbatu_sem7_tracker_v2')) || INITIAL_DATA;
+        let currentTab = 'ALL';
+
+        function saveState() {
+            localStorage.setItem('dbatu_sem7_tracker_v2', JSON.stringify(appState));
+            renderStats();
+            updateCountdowns();
+        }
+
+        // Theme Switcher
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('dbatu_theme_v2', isDark ? 'dark' : 'light');
+        });
+
+        if (localStorage.getItem('dbatu_theme_v2') === 'light') {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function switchTab(subId) {
+            currentTab = subId;
+            document.querySelectorAll('.subject-tab').forEach(btn => {
+                btn.classList.remove('border-b-2', 'border-sky-500', 'text-sky-600', 'dark:text-sky-400', 'bg-sky-50/50', 'dark:bg-sky-950/30');
+                btn.classList.add('text-slate-500', 'dark:text-slate-400');
+            });
+            const activeTab = document.getElementById(`tab-${subId}`);
+            if (activeTab) {
+                activeTab.classList.add('border-b-2', 'border-sky-500', 'text-sky-600', 'dark:text-sky-400', 'bg-sky-50/50', 'dark:bg-sky-950/30');
+                activeTab.classList.remove('text-slate-500', 'dark:text-slate-400');
+            }
+            renderView();
+        }
+
+        // Update Live Countdown Timers
+        function updateCountdowns() {
+            const today = new Date();
+            appState.subjects.forEach(sub => {
+                const exam = new Date(sub.examDate);
+                const diffTime = exam - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const cdElem = document.getElementById(`cd-${sub.id}`);
+                if (cdElem) {
+                    if (diffDays > 0) {
+                        cdElem.innerText = `${diffDays}d left`;
+                    } else if (diffDays === 0) {
+                        cdElem.innerText = `TODAY!`;
+                    } else {
+                        cdElem.innerText = `Done`;
+                    }
+                }
+            });
+        }
+
+        // Render Main View
+        function renderView() {
+            const container = document.getElementById('subjectContainer');
+            container.innerHTML = '';
+
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const subjectVal = document.getElementById('subjectFilter').value;
+            const statusVal = document.getElementById('statusFilter').value;
+            const termVal = document.getElementById('termFilter').value;
+
+            const filteredSubjects = appState.subjects.filter(sub => {
+                if (currentTab !== 'ALL' && sub.id !== currentTab) return false;
+                if (subjectVal !== 'ALL' && sub.id !== subjectVal) return false;
+                return true;
+            });
+
+            if (filteredSubjects.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <i class="fa-solid fa-filter-circle-xmark text-4xl text-slate-300 dark:text-slate-700 mb-3"></i>
+                        <p class="text-sm font-medium text-slate-500">No subjects match the selected filters.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredSubjects.forEach(subject => {
+                const subCard = document.createElement('div');
+                subCard.className = 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6';
+
+                let totalTopics = 0;
+                let completedTopics = 0;
+                subject.units.forEach(u => u.topics.forEach(t => {
+                    totalTopics++;
+                    if (appState.progress[t.id]) completedTopics++;
+                }));
+                const subPercent = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
+
+                // Units List HTML
+                let unitsHTML = '';
+                subject.units.forEach(unit => {
+                    const matchingTopics = unit.topics.filter(topic => {
+                        const isDone = !!appState.progress[topic.id];
+                        if (statusVal === 'COMPLETED' && !isDone) return false;
+                        if (statusVal === 'PENDING' && isDone) return false;
+                        if (searchVal && !topic.text.toLowerCase().includes(searchVal)) return false;
+                        return true;
+                    });
+
+                    const topicsList = matchingTopics.map(topic => {
+                        const isChecked = !!appState.progress[topic.id];
+                        const noteText = appState.notes[topic.id] || '';
+                        return `
+                            <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-700/50 space-y-2">
+                                <div class="flex items-start justify-between gap-3">
+                                    <label class="flex items-start space-x-3 cursor-pointer flex-1">
+                                        <input type="checkbox" onchange="toggleTopic('${topic.id}')" ${isChecked ? 'checked' : ''} 
+                                               class="mt-1 w-4 h-4 text-sky-600 rounded border-slate-300 focus:ring-sky-500">
+                                        <span class="text-xs sm:text-sm ${isChecked ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200'} font-medium">
+                                            ${highlightSearch(topic.text, searchVal)}
+                                        </span>
+                                    </label>
+                                    <button onclick="toggleNoteField('${topic.id}')" class="text-slate-400 hover:text-sky-500 text-xs px-1.5 py-0.5 rounded border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition" title="Notes">
+                                        <i class="fa-regular fa-note-sticky"></i>
+                                    </button>
+                                </div>
+                                <div id="note-${topic.id}" class="${noteText ? '' : 'hidden'} mt-2">
+                                    <textarea onblur="saveNote('${topic.id}', this.value)" placeholder="Write your revision notes, formula or key points..." 
+                                              class="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500">${noteText}</textarea>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    if (matchingTopics.length > 0 || (searchVal === '' && statusVal === 'ALL')) {
+                        unitsHTML += `
+                            <div class="border border-slate-200 dark:border-slate-800 rounded-xl p-4 space-y-3">
+                                <h4 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 flex items-center justify-between">
+                                    <span>${unit.title}</span>
+                                    <span class="text-[11px] font-normal text-slate-400">${matchingTopics.length} topics</span>
+                                </h4>
+                                <div class="grid grid-cols-1 gap-2">
+                                    ${topicsList || '<p class="text-xs text-slate-400 italic">No topics match current filter.</p>'}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                // PYQs List HTML
+                const filteredPYQs = (subject.pyqs || []).filter(pyq => {
+                    const status = appState.progress[pyq.id] || 'NOT_STARTED';
+                    if (statusVal === 'MASTERED' && status !== 'MASTERED') return false;
+                    if (statusVal === 'SOLVING' && status !== 'SOLVING') return false;
+                    if (termVal !== 'ALL' && !pyq.term.includes(termVal)) return false;
+                    if (searchVal && !pyq.text.toLowerCase().includes(searchVal) && !pyq.term.toLowerCase().includes(searchVal)) return false;
+                    return true;
+                });
+
+                const pyqListHTML = filteredPYQs.map(pyq => {
+                    const status = appState.progress[pyq.id] || 'NOT_STARTED';
+                    return `
+                        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-700/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1 flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+                                        ${pyq.term}
+                                    </span>
+                                    <span class="text-[10px] font-semibold text-slate-400">${pyq.unit}</span>
+                                </div>
+                                <p class="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200">
+                                    ${highlightSearch(pyq.text, searchVal)}
+                                </p>
+                            </div>
+                            <div class="flex items-center space-x-1 shrink-0">
+                                <button onclick="setPyqStatus('${pyq.id}', 'NOT_STARTED')" 
+                                        class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border ${status === 'NOT_STARTED' ? 'bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white border-slate-400' : 'bg-transparent text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300'} transition">
+                                    Pending
+                                </button>
+                                <button onclick="setPyqStatus('${pyq.id}', 'SOLVING')" 
+                                        class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border ${status === 'SOLVING' ? 'bg-amber-500 text-white border-amber-600' : 'bg-transparent text-amber-600/70 border-slate-200 dark:border-slate-800 hover:border-amber-300'} transition">
+                                    Solving
+                                </button>
+                                <button onclick="setPyqStatus('${pyq.id}', 'MASTERED')" 
+                                        class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border ${status === 'MASTERED' ? 'bg-emerald-600 text-white border-emerald-700' : 'bg-transparent text-emerald-600/70 border-slate-200 dark:border-slate-800 hover:border-emerald-300'} transition">
+                                    Mastered
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                subCard.innerHTML = `
+                    <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 gap-3">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-800">
+                                    ${subject.code}
+                                </span>
+                                <span class="text-xs font-semibold text-amber-500"><i class="fa-solid fa-calendar-day mr-1"></i> ${subject.examDate}</span>
+                            </div>
+                            <h3 class="text-xl font-extrabold text-slate-800 dark:text-slate-100 mt-1">${subject.name}</h3>
+                        </div>
+                        <div class="w-full md:w-48 space-y-1">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-slate-500">Subject Covered</span>
+                                <span class="text-sky-600 dark:text-sky-400">${subPercent}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                <div class="bg-sky-500 h-2 rounded-full transition-all duration-300" style="width: ${subPercent}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Syllabus Section -->
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+                            <i class="fa-solid fa-list-check text-sky-500"></i>
+                            <span>Syllabus Topics Checklist</span>
+                        </h4>
+                        ${unitsHTML || '<p class="text-xs text-slate-400 italic">No syllabus units match current search filter.</p>'}
+                    </div>
+
+                    <!-- PYQ Bank Section -->
+                    ${subject.pyqs && subject.pyqs.length > 0 ? `
+                        <div class="space-y-4 border-t border-slate-100 dark:border-slate-800 pt-4">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+                                    <i class="fa-solid fa-file-pen text-amber-500"></i>
+                                    <span>Realigned Previous Year Questions (PYQs)</span>
+                                </h4>
+                                <span class="text-xs text-slate-400 font-medium">${filteredPYQs.length} Questions</span>
+                            </div>
+                            <div class="space-y-2">
+                                ${pyqListHTML || '<p class="text-xs text-slate-400 italic">No PYQs matching term or search filter.</p>'}
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+
+                container.appendChild(subCard);
+            });
+
+            renderStats();
+            updateCountdowns();
+        }
+
+        function highlightSearch(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, `<mark class="bg-amber-200 dark:bg-amber-900/60 dark:text-amber-200 px-0.5 rounded">$1</mark>`);
+        }
+
+        function toggleTopic(id) {
+            appState.progress[id] = !appState.progress[id];
+            saveState();
+            renderView();
+        }
+
+        function setPyqStatus(id, status) {
+            appState.progress[id] = status;
+            saveState();
+            renderView();
+        }
+
+        function toggleNoteField(id) {
+            const el = document.getElementById(`note-${id}`);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function saveNote(id, text) {
+            appState.notes[id] = text;
+            saveState();
+        }
+
+        function renderStats() {
+            let totalTopics = 0;
+            let completedTopics = 0;
+            let totalPyqs = 0;
+            let masteredPyqs = 0;
+            let inProgressPyqs = 0;
+
+            appState.subjects.forEach(sub => {
+                sub.units.forEach(u => u.topics.forEach(t => {
+                    totalTopics++;
+                    if (appState.progress[t.id]) completedTopics++;
+                }));
+                if (sub.pyqs) {
+                    sub.pyqs.forEach(pq => {
+                        totalPyqs++;
+                        const st = appState.progress[pq.id];
+                        if (st === 'MASTERED') masteredPyqs++;
+                        if (st === 'SOLVING') inProgressPyqs++;
+                    });
+                }
+            });
+
+            const syllabusPercent = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
+            const pyqPercent = totalPyqs ? Math.round((masteredPyqs / totalPyqs) * 100) : 0;
+
+            document.getElementById('overallSyllabusPercent').innerText = `${syllabusPercent}%`;
+            document.getElementById('overallSyllabusRatio').innerText = `(${completedTopics}/${totalTopics} topics)`;
+            document.getElementById('overallSyllabusBar').style.width = `${syllabusPercent}%`;
+
+            document.getElementById('overallPyqPercent').innerText = `${pyqPercent}%`;
+            document.getElementById('overallPyqRatio').innerText = `(${masteredPyqs}/${totalPyqs} solved)`;
+            document.getElementById('overallPyqBar').style.width = `${pyqPercent}%`;
+
+            document.getElementById('pyqInProgressCount').innerText = inProgressPyqs;
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `DBATU_Sem7_ExamTracker_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedState = JSON.parse(e.target.result);
+                    if (importedState && importedState.subjects) {
+                        appState = importedState;
+                        saveState();
+                        renderView();
+                    } else {
+                        alert("Invalid file format.");
+                    }
+                } catch (err) {
+                    alert("Failed to import JSON data.");
+                }
+            };
+            if (event.target.files[0]) {
+                reader.readAsText(event.target.files[0]);
+            }
+        }
+
+        function confirmReset() {
+            if (confirm("Reset all stored progress and notes?")) {
+                appState = INITIAL_DATA;
+                saveState();
+                renderView();
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', renderView);
+        document.getElementById('subjectFilter').addEventListener('change', renderView);
+        document.getElementById('statusFilter').addEventListener('change', renderView);
+        document.getElementById('termFilter').addEventListener('change', renderView);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderView();
+
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
+                    self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl).catch(() => {});
+            }
+        });
+    </script>
+</body>
+</html>
